@@ -1,0 +1,9 @@
+:root { color-scheme: light; font-family: Tahoma, sans-serif; background: #f5f7fb; color: #172033; }
+* { box-sizing: border-box; }
+body { margin: 0; }
+.shell { max-width: 760px; margin: 0 auto; padding: 12rem 2rem; }
+.eyebrow { color: #4461ee; font-size: .8rem; letter-spacing: .16em; font-weight: 700; }
+h1 { margin: 1rem 0; font-size: clamp(2rem, 5vw, 4rem); line-height: 1.25; }
+p { color: #5b6578; font-size: 1.1rem; line-height: 2; }
+.status-card { display: grid; gap: .5rem; margin-top: 2rem; padding: 1.25rem; background: white; border: 1px solid #e3e8f2; border-radius: 1rem; box-shadow: 0 1rem 3rem #263a6712; }
+.status-card span { color: #667085; }

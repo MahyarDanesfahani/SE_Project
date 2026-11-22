@@ -1,0 +1,1 @@
+"""ZU Assistant backend application."""
