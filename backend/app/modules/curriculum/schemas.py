@@ -58,3 +58,7 @@ class CourseImportPreview(BaseModel):
     valid_rows: int
     invalid_rows: int
     rows: list[CourseImportRow]
+
+
+class CourseImportConfirm(BaseModel):
+    rows: list[CourseImportRow] = Field(min_length=1, max_length=500)

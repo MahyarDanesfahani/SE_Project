@@ -20,6 +20,7 @@ API چارت درسی:
 - `GET /api/v1/curricula/{curriculum_id}`
 - `POST /api/v1/curricula/{curriculum_id}/courses`
 - `POST /api/v1/curricula/{curriculum_id}/import/preview` — فایل CSV/XLSX، بدون ثبت نهایی
+- `POST /api/v1/curricula/{curriculum_id}/import/confirm` — تأیید ردیف‌های اصلاح‌شده و ثبت تراکنشی
 
 ## اجرای اولیه
 
