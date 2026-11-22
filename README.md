@@ -14,6 +14,12 @@
 - `infra/` — سرویس‌های زیرساختی توسعه
 - `docs/` — وضعیت و تصمیم‌های فنی
 
+API چارت درسی:
+
+- `POST /api/v1/curricula`
+- `GET /api/v1/curricula/{curriculum_id}`
+- `POST /api/v1/curricula/{curriculum_id}/courses`
+
 ## اجرای اولیه
 
 ```powershell
