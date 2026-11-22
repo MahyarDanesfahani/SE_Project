@@ -40,3 +40,21 @@ class CurriculumResponse(BaseModel):
     version: str
     source_name: str | None
     courses: list[CourseResponse] = Field(default_factory=list)
+
+
+class CourseImportRow(BaseModel):
+    row_number: int
+    code: str
+    title: str
+    credits: int | None
+    semester_number: int | None
+    status: str
+    errors: list[str]
+
+
+class CourseImportPreview(BaseModel):
+    filename: str
+    total_rows: int
+    valid_rows: int
+    invalid_rows: int
+    rows: list[CourseImportRow]

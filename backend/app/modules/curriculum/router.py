@@ -1,13 +1,15 @@
 from uuid import UUID
 
-from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi import APIRouter, Depends, File, HTTPException, UploadFile, status
 from sqlalchemy import select
 from sqlalchemy.orm import Session, joinedload
 
 from app.db.session import get_db
 from app.models import Course, Curriculum, CurriculumCourse, User
 from app.modules.identity.dependencies import get_current_user
-from app.modules.curriculum.schemas import CourseCreate, CourseResponse, CurriculumCreate, CurriculumResponse
+from app.core.config import get_settings
+from app.modules.curriculum.importer import parse_course_file
+from app.modules.curriculum.schemas import CourseCreate, CourseImportPreview, CourseImportRow, CourseResponse, CurriculumCreate, CurriculumResponse
 
 router = APIRouter(prefix="/curricula", tags=["curriculum"])
 
@@ -61,3 +63,18 @@ def add_course(curriculum_id: UUID, payload: CourseCreate, user: User = Depends(
     db.add(link)
     db.commit()
     return CourseResponse(id=course.id, code=course.code, title=course.title, credits=course.credits, course_type=course.course_type, semester_number=link.semester_number, status=link.status)
+
+
+@router.post("/{curriculum_id}/import/preview", response_model=CourseImportPreview)
+async def preview_course_import(curriculum_id: UUID, file: UploadFile = File(...), user: User = Depends(get_current_user), db: Session = Depends(get_db)) -> CourseImportPreview:
+    _get_owned(curriculum_id, user, db)
+    content = await file.read(get_settings().max_upload_size_bytes + 1)
+    if len(content) > get_settings().max_upload_size_bytes:
+        raise HTTPException(status_code=status.HTTP_413_REQUEST_ENTITY_TOO_LARGE, detail="حجم فایل بیش از حد مجاز است")
+    try:
+        rows = parse_course_file(file.filename or "", content)
+    except (UnicodeDecodeError, ValueError, KeyError, OSError) as exc:
+        raise HTTPException(status_code=status.HTTP_422_UNPROCESSABLE_ENTITY, detail=str(exc)) from exc
+    preview_rows = [CourseImportRow(row_number=row.row_number, code=row.code, title=row.title, credits=row.credits, semester_number=row.semester_number, status=row.status, errors=row.errors) for row in rows]
+    invalid = sum(bool(row.errors) for row in rows)
+    return CourseImportPreview(filename=file.filename or "unknown", total_rows=len(rows), valid_rows=len(rows) - invalid, invalid_rows=invalid, rows=preview_rows)
