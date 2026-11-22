@@ -25,3 +25,17 @@ class ProfileResponse(BaseModel):
     email: str
     is_active: bool
     university_id: UUID | None
+
+
+class StudentProfileUpdate(BaseModel):
+    full_name: str | None = Field(default=None, max_length=150)
+    student_number: str | None = Field(default=None, max_length=50)
+    field_of_study: str | None = Field(default=None, max_length=150)
+    degree_level: str | None = Field(default=None, max_length=50)
+    faculty: str | None = Field(default=None, max_length=150)
+    admission_year: int | None = Field(default=None, ge=1300, le=1600)
+
+
+class StudentProfileResponse(StudentProfileUpdate):
+    id: UUID
+    user_id: UUID

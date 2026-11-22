@@ -27,6 +27,14 @@ uvicorn app.main:app --reload
 
 سپس `http://localhost:8000/api/v1/health` را باز کنید.
 
+برای اجرای migration و seed اولیه:
+
+```powershell
+cd backend
+alembic upgrade head
+python scripts/seed.py
+```
+
 ## وضعیت
 
 این پروژه در فاز صفر توسعه است. قابلیت‌ها نباید تا زمان پیاده‌سازی واقعی، تست و ثبت در [IMPLEMENTATION_STATUS.md](docs/IMPLEMENTATION_STATUS.md) تکمیل‌شده تلقی شوند.

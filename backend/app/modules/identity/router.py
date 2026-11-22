@@ -4,9 +4,9 @@ from sqlalchemy.orm import Session
 
 from app.core.security import create_access_token, hash_password, verify_password
 from app.db.session import get_db
-from app.models import User
+from app.models import StudentProfile, User
 from app.modules.identity.dependencies import get_current_user
-from app.modules.identity.schemas import LoginRequest, ProfileResponse, RegisterRequest, TokenResponse
+from app.modules.identity.schemas import LoginRequest, ProfileResponse, RegisterRequest, StudentProfileResponse, StudentProfileUpdate, TokenResponse
 
 router = APIRouter(prefix="/auth", tags=["identity"])
 
@@ -36,3 +36,27 @@ def login(payload: LoginRequest, db: Session = Depends(get_db)) -> TokenResponse
 @router.get("/me", response_model=ProfileResponse)
 def get_me(current_user: User = Depends(get_current_user)) -> User:
     return current_user
+
+
+@router.get("/profile", response_model=StudentProfileResponse)
+def get_profile(current_user: User = Depends(get_current_user), db: Session = Depends(get_db)) -> StudentProfile:
+    profile = db.scalar(select(StudentProfile).where(StudentProfile.user_id == current_user.id))
+    if profile is None:
+        profile = StudentProfile(user_id=current_user.id)
+        db.add(profile)
+        db.commit()
+        db.refresh(profile)
+    return profile
+
+
+@router.put("/profile", response_model=StudentProfileResponse)
+def update_profile(payload: StudentProfileUpdate, current_user: User = Depends(get_current_user), db: Session = Depends(get_db)) -> StudentProfile:
+    profile = db.scalar(select(StudentProfile).where(StudentProfile.user_id == current_user.id))
+    if profile is None:
+        profile = StudentProfile(user_id=current_user.id)
+        db.add(profile)
+    for field, value in payload.model_dump(exclude_unset=True).items():
+        setattr(profile, field, value.strip() if isinstance(value, str) else value)
+    db.commit()
+    db.refresh(profile)
+    return profile
