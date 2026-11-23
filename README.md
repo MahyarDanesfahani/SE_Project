@@ -23,6 +23,9 @@ API چارت درسی:
 - `POST /api/v1/curricula/{curriculum_id}/import/confirm` — تأیید ردیف‌های اصلاح‌شده و ثبت تراکنشی
 - `POST /api/v1/curricula/{curriculum_id}/courses/{course_id}/prerequisites` — ثبت پیش‌نیاز/هم‌نیاز
 - `GET /api/v1/curricula/{curriculum_id}/courses/{course_id}/prerequisites` — مشاهده روابط
+- `POST /api/v1/offerings/terms` — ایجاد نیمسال
+- `POST /api/v1/offerings` — ایجاد گروه درسی
+- `POST /api/v1/offerings/{offering_id}/sessions` — افزودن جلسه زمانی
 
 ## اجرای اولیه
 
