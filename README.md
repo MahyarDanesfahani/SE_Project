@@ -32,6 +32,9 @@ API چارت درسی:
 - `POST /api/v1/grades` — ثبت نمره
 - `GET /api/v1/grades` — مشاهده نمره‌ها
 - `GET /api/v1/grades/gpa` — محاسبه معدل وزنی تأییدشده
+- `POST /api/v1/exams` و `GET /api/v1/exams` — مدیریت امتحانات
+- `POST /api/v1/tasks` و `GET /api/v1/tasks` — مدیریت وظایف
+- `GET /api/v1/calendar` — تقویم یکپارچه امتحانات و وظایف
 
 ## اجرای اولیه
 
