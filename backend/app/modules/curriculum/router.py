@@ -5,11 +5,11 @@ from sqlalchemy import select
 from sqlalchemy.orm import Session, joinedload
 
 from app.db.session import get_db
-from app.models import Course, CourseStatus, Curriculum, CurriculumCourse, User
+from app.models import Course, CoursePrerequisite, CourseStatus, Curriculum, CurriculumCourse, User
 from app.modules.identity.dependencies import get_current_user
 from app.core.config import get_settings
 from app.modules.curriculum.importer import parse_course_file
-from app.modules.curriculum.schemas import CourseCreate, CourseImportConfirm, CourseImportPreview, CourseImportRow, CourseResponse, CurriculumCreate, CurriculumResponse
+from app.modules.curriculum.schemas import CourseCreate, CourseImportConfirm, CourseImportPreview, CourseImportRow, CourseResponse, CurriculumCreate, CurriculumResponse, PrerequisiteCreate, PrerequisiteResponse
 
 router = APIRouter(prefix="/curricula", tags=["curriculum"])
 
@@ -63,6 +63,32 @@ def add_course(curriculum_id: UUID, payload: CourseCreate, user: User = Depends(
     db.add(link)
     db.commit()
     return CourseResponse(id=course.id, code=course.code, title=course.title, credits=course.credits, course_type=course.course_type, semester_number=link.semester_number, status=link.status)
+
+
+@router.post("/{curriculum_id}/courses/{course_id}/prerequisites", response_model=PrerequisiteResponse, status_code=status.HTTP_201_CREATED)
+def add_prerequisite(curriculum_id: UUID, course_id: UUID, payload: PrerequisiteCreate, user: User = Depends(get_current_user), db: Session = Depends(get_db)) -> CoursePrerequisite:
+    curriculum = _get_owned(curriculum_id, user, db)
+    curriculum_course_ids = {item.course_id for item in curriculum.courses}
+    if course_id not in curriculum_course_ids or payload.prerequisite_course_id not in curriculum_course_ids:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="هر دو درس باید در همین چارت وجود داشته باشند")
+    if course_id == payload.prerequisite_course_id:
+        raise HTTPException(status_code=status.HTTP_422_UNPROCESSABLE_ENTITY, detail="یک درس نمی‌تواند پیش‌نیاز خودش باشد")
+    existing = db.scalar(select(CoursePrerequisite).where(CoursePrerequisite.course_id == course_id, CoursePrerequisite.prerequisite_course_id == payload.prerequisite_course_id))
+    if existing:
+        raise HTTPException(status_code=status.HTTP_409_CONFLICT, detail="این رابطه قبلاً ثبت شده است")
+    relation = CoursePrerequisite(course_id=course_id, prerequisite_course_id=payload.prerequisite_course_id, relation_type=payload.relation_type)
+    db.add(relation)
+    db.commit()
+    db.refresh(relation)
+    return relation
+
+
+@router.get("/{curriculum_id}/courses/{course_id}/prerequisites", response_model=list[PrerequisiteResponse])
+def list_prerequisites(curriculum_id: UUID, course_id: UUID, user: User = Depends(get_current_user), db: Session = Depends(get_db)) -> list[CoursePrerequisite]:
+    curriculum = _get_owned(curriculum_id, user, db)
+    if course_id not in {item.course_id for item in curriculum.courses}:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="درس در این چارت وجود ندارد")
+    return list(db.scalars(select(CoursePrerequisite).where(CoursePrerequisite.course_id == course_id)).all())
 
 
 @router.post("/{curriculum_id}/import/preview", response_model=CourseImportPreview)

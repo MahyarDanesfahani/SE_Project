@@ -1,3 +1,4 @@
+from typing import Literal
 from uuid import UUID
 
 from pydantic import BaseModel, Field
@@ -62,3 +63,15 @@ class CourseImportPreview(BaseModel):
 
 class CourseImportConfirm(BaseModel):
     rows: list[CourseImportRow] = Field(min_length=1, max_length=500)
+
+
+class PrerequisiteCreate(BaseModel):
+    prerequisite_course_id: UUID
+    relation_type: Literal["prerequisite", "corequisite"] = "prerequisite"
+
+
+class PrerequisiteResponse(BaseModel):
+    id: UUID
+    course_id: UUID
+    prerequisite_course_id: UUID
+    relation_type: str

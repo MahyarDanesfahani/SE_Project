@@ -21,6 +21,8 @@ API چارت درسی:
 - `POST /api/v1/curricula/{curriculum_id}/courses`
 - `POST /api/v1/curricula/{curriculum_id}/import/preview` — فایل CSV/XLSX، بدون ثبت نهایی
 - `POST /api/v1/curricula/{curriculum_id}/import/confirm` — تأیید ردیف‌های اصلاح‌شده و ثبت تراکنشی
+- `POST /api/v1/curricula/{curriculum_id}/courses/{course_id}/prerequisites` — ثبت پیش‌نیاز/هم‌نیاز
+- `GET /api/v1/curricula/{curriculum_id}/courses/{course_id}/prerequisites` — مشاهده روابط
 
 ## اجرای اولیه
 
