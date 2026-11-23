@@ -5,7 +5,7 @@ from sqlalchemy import select
 from sqlalchemy.orm import Session, joinedload
 
 from app.db.session import get_db
-from app.models import ClassSession, Course, CourseOffering, ScheduleScenario, ScheduleScenarioItem, Term, User
+from app.models import ClassSession, Course, CourseOffering, CoursePrerequisite, ScheduleScenario, ScheduleScenarioItem, StudentCourseRecord, Term, User
 from app.modules.identity.dependencies import get_current_user
 from app.modules.offerings.schemas import OfferingCreate, OfferingResponse, SessionCreate, SessionResponse, TermCreate
 from app.modules.offerings.optimizer import generate_valid_scenarios
@@ -56,6 +56,13 @@ def generate_schedule(payload: GenerateScheduleRequest, user: User = Depends(get
     offerings = list(db.scalars(select(CourseOffering).options(joinedload(CourseOffering.sessions)).where(CourseOffering.id.in_(payload.offering_ids), CourseOffering.owner_user_id == user.id, CourseOffering.term_id == payload.term_id)).unique().all())
     if len(offerings) != len(set(payload.offering_ids)):
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="یک یا چند گروه درسی پیدا نشد")
+    course_ids = {offering.course_id for offering in offerings}
+    prerequisites = list(db.scalars(select(CoursePrerequisite).where(CoursePrerequisite.course_id.in_(course_ids), CoursePrerequisite.relation_type == "prerequisite")).all())
+    passed_course_ids = set(db.scalars(select(StudentCourseRecord.course_id).where(StudentCourseRecord.user_id == user.id, StudentCourseRecord.status == "passed")).all())
+    blocked_courses = {item.course_id for item in prerequisites if item.prerequisite_course_id not in passed_course_ids}
+    offerings = [offering for offering in offerings if offering.course_id not in blocked_courses]
+    if not offerings:
+        raise HTTPException(status_code=status.HTTP_422_UNPROCESSABLE_ENTITY, detail="پیش‌نیاز درس‌های انتخاب‌شده گذرانده نشده است")
     groups: dict[UUID, list[CourseOffering]] = {}
     for offering in offerings:
         groups.setdefault(offering.course_id, []).append(offering)

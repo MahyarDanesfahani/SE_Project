@@ -60,3 +60,14 @@ class CoursePrerequisite(Base):
     prerequisite_course_id: Mapped[UUID] = mapped_column(ForeignKey("courses.id"), index=True)
     relation_type: Mapped[str] = mapped_column(String(20), default="prerequisite")
     __table_args__ = (UniqueConstraint("course_id", "prerequisite_course_id", name="uq_course_prerequisite"),)
+
+
+class StudentCourseRecord(Base):
+    __tablename__ = "student_course_records"
+    id: Mapped[UUID] = mapped_column(primary_key=True, default=uuid4)
+    user_id: Mapped[UUID] = mapped_column(ForeignKey("users.id"), index=True)
+    course_id: Mapped[UUID] = mapped_column(ForeignKey("courses.id"), index=True)
+    term_title: Mapped[str | None] = mapped_column(String(100))
+    status: Mapped[str] = mapped_column(String(30), default="passed")
+    grade: Mapped[int | None] = mapped_column(Integer)
+    __table_args__ = (UniqueConstraint("user_id", "course_id", "term_title", name="uq_student_course_record"),)

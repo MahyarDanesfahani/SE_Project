@@ -27,6 +27,8 @@ API چارت درسی:
 - `POST /api/v1/offerings` — ایجاد گروه درسی
 - `POST /api/v1/offerings/{offering_id}/sessions` — افزودن جلسه زمانی
 - `POST /api/v1/offerings/schedule/generate` — تولید سناریوهای بدون تداخل زمانی
+- `POST /api/v1/academic-records` — ثبت سابقه درس
+- `GET /api/v1/academic-records` — مشاهده سوابق خود دانشجو
 
 ## اجرای اولیه
 
