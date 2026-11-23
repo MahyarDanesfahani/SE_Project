@@ -29,6 +29,9 @@ API چارت درسی:
 - `POST /api/v1/offerings/schedule/generate` — تولید سناریوهای بدون تداخل زمانی
 - `POST /api/v1/academic-records` — ثبت سابقه درس
 - `GET /api/v1/academic-records` — مشاهده سوابق خود دانشجو
+- `POST /api/v1/grades` — ثبت نمره
+- `GET /api/v1/grades` — مشاهده نمره‌ها
+- `GET /api/v1/grades/gpa` — محاسبه معدل وزنی تأییدشده
 
 ## اجرای اولیه
 

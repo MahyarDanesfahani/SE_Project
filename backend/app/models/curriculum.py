@@ -2,7 +2,7 @@ from datetime import datetime
 from enum import StrEnum
 from uuid import UUID, uuid4
 
-from sqlalchemy import DateTime, Enum, ForeignKey, Integer, String, UniqueConstraint, func
+from sqlalchemy import DateTime, Enum, ForeignKey, Integer, Numeric, String, UniqueConstraint, func
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from app.db.session import Base
@@ -71,3 +71,17 @@ class StudentCourseRecord(Base):
     status: Mapped[str] = mapped_column(String(30), default="passed")
     grade: Mapped[int | None] = mapped_column(Integer)
     __table_args__ = (UniqueConstraint("user_id", "course_id", "term_title", name="uq_student_course_record"),)
+
+
+class GradeRecord(Base):
+    __tablename__ = "grade_records"
+    id: Mapped[UUID] = mapped_column(primary_key=True, default=uuid4)
+    user_id: Mapped[UUID] = mapped_column(ForeignKey("users.id"), index=True)
+    course_id: Mapped[UUID] = mapped_column(ForeignKey("courses.id"), index=True)
+    term_title: Mapped[str] = mapped_column(String(100))
+    grade: Mapped[float | None] = mapped_column(Numeric(4, 2))
+    source: Mapped[str] = mapped_column(String(30), default="manual")
+    is_verified: Mapped[bool] = mapped_column(default=False)
+    recorded_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now())
+    course: Mapped[Course] = relationship()
+    __table_args__ = (UniqueConstraint("user_id", "course_id", "term_title", name="uq_grade_record"),)
