@@ -44,3 +44,21 @@ class ClassSession(Base):
     end_time: Mapped[time] = mapped_column(Time)
     room: Mapped[str | None] = mapped_column(String(100))
     offering: Mapped[CourseOffering] = relationship(back_populates="sessions")
+
+
+class ScheduleScenario(Base):
+    __tablename__ = "schedule_scenarios"
+    id: Mapped[UUID] = mapped_column(primary_key=True, default=uuid4)
+    owner_user_id: Mapped[UUID] = mapped_column(ForeignKey("users.id"), index=True)
+    term_id: Mapped[UUID] = mapped_column(ForeignKey("terms.id"), index=True)
+    name: Mapped[str] = mapped_column(String(150))
+    score: Mapped[int] = mapped_column(Integer, default=0)
+    items: Mapped[list["ScheduleScenarioItem"]] = relationship(back_populates="scenario", cascade="all, delete-orphan")
+
+
+class ScheduleScenarioItem(Base):
+    __tablename__ = "schedule_scenario_items"
+    id: Mapped[UUID] = mapped_column(primary_key=True, default=uuid4)
+    scenario_id: Mapped[UUID] = mapped_column(ForeignKey("schedule_scenarios.id"), index=True)
+    offering_id: Mapped[UUID] = mapped_column(ForeignKey("course_offerings.id"), index=True)
+    scenario: Mapped[ScheduleScenario] = relationship(back_populates="items")

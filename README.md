@@ -26,6 +26,7 @@ API چارت درسی:
 - `POST /api/v1/offerings/terms` — ایجاد نیمسال
 - `POST /api/v1/offerings` — ایجاد گروه درسی
 - `POST /api/v1/offerings/{offering_id}/sessions` — افزودن جلسه زمانی
+- `POST /api/v1/offerings/schedule/generate` — تولید سناریوهای بدون تداخل زمانی
 
 ## اجرای اولیه
 

@@ -5,9 +5,11 @@ from sqlalchemy import select
 from sqlalchemy.orm import Session, joinedload
 
 from app.db.session import get_db
-from app.models import ClassSession, Course, CourseOffering, Term, User
+from app.models import ClassSession, Course, CourseOffering, ScheduleScenario, ScheduleScenarioItem, Term, User
 from app.modules.identity.dependencies import get_current_user
 from app.modules.offerings.schemas import OfferingCreate, OfferingResponse, SessionCreate, SessionResponse, TermCreate
+from app.modules.offerings.optimizer import generate_valid_scenarios
+from app.modules.offerings.optimizer_schemas import GenerateScheduleRequest, GenerateScheduleResponse, GeneratedScenario
 
 router = APIRouter(prefix="/offerings", tags=["course-offerings"])
 
@@ -47,3 +49,26 @@ def add_session(offering_id: UUID, payload: SessionCreate, user: User = Depends(
     db.commit()
     offering = db.execute(select(CourseOffering).options(joinedload(CourseOffering.course), joinedload(CourseOffering.sessions)).where(CourseOffering.id == offering_id)).unique().scalar_one()
     return _offering_response(offering)
+
+
+@router.post("/schedule/generate", response_model=GenerateScheduleResponse)
+def generate_schedule(payload: GenerateScheduleRequest, user: User = Depends(get_current_user), db: Session = Depends(get_db)) -> GenerateScheduleResponse:
+    offerings = list(db.scalars(select(CourseOffering).options(joinedload(CourseOffering.sessions)).where(CourseOffering.id.in_(payload.offering_ids), CourseOffering.owner_user_id == user.id, CourseOffering.term_id == payload.term_id)).unique().all())
+    if len(offerings) != len(set(payload.offering_ids)):
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="یک یا چند گروه درسی پیدا نشد")
+    groups: dict[UUID, list[CourseOffering]] = {}
+    for offering in offerings:
+        groups.setdefault(offering.course_id, []).append(offering)
+    scenarios = generate_valid_scenarios(list(groups.values()), payload.max_scenarios)
+    if not scenarios:
+        raise HTTPException(status_code=status.HTTP_422_UNPROCESSABLE_ENTITY, detail="هیچ برنامه‌ای بدون تداخل زمانی پیدا نشد")
+    result: list[GeneratedScenario] = []
+    for index, selected in enumerate(scenarios, start=1):
+        scenario = ScheduleScenario(owner_user_id=user.id, term_id=payload.term_id, name=f"سناریو {index}", score=sum(item.credits for item in selected))
+        db.add(scenario)
+        db.flush()
+        for offering in selected:
+            db.add(ScheduleScenarioItem(scenario_id=scenario.id, offering_id=offering.id))
+        result.append(GeneratedScenario(id=scenario.id, name=scenario.name, score=scenario.score, offering_ids=[item.id for item in selected]))
+    db.commit()
+    return GenerateScheduleResponse(scenarios=result)
