@@ -1,3 +1,3 @@
-export default function HomePage() {
-  return <main className="shell"><span className="eyebrow">ZU ASSISTANT</span><h1>دستیار هوشمند دانشجویان دانشگاه زنجان</h1><p>اسکلت اولیه سامانه آماده است. قابلیت‌های آموزشی در مراحل بعدی اضافه می‌شوند.</p><div className="status-card"><strong>وضعیت نسخه پایه</strong><span>Backend و رابط وب در حال توسعه هستند.</span></div></main>;
-}
+import Link from "next/link";
+
+export default function HomePage() { return <main className="shell"><span className="eyebrow">ZU ASSISTANT</span><h1>دستیار هوشمند دانشجویان دانشگاه زنجان</h1><p>همه اطلاعات آموزشی و کارهای روزانه شما در یک نمای ساده.</p><Link className="primary-link" href="/dashboard">ورود به داشبورد</Link></main>; }

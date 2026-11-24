@@ -7,3 +7,14 @@ h1 { margin: 1rem 0; font-size: clamp(2rem, 5vw, 4rem); line-height: 1.25; }
 p { color: #5b6578; font-size: 1.1rem; line-height: 2; }
 .status-card { display: grid; gap: .5rem; margin-top: 2rem; padding: 1.25rem; background: white; border: 1px solid #e3e8f2; border-radius: 1rem; box-shadow: 0 1rem 3rem #263a6712; }
 .status-card span { color: #667085; }
+.primary-link { display: inline-block; margin-top: 1rem; padding: .9rem 1.2rem; border-radius: .75rem; background: #4461ee; color: white; text-decoration: none; }
+.dashboard { max-width: 1120px; margin: 0 auto; padding: 4rem 2rem; }
+.dashboard-header { margin-bottom: 2rem; }
+.metrics { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem; }
+.metric, .panel { padding: 1.25rem; background: white; border: 1px solid #e3e8f2; border-radius: 1rem; box-shadow: 0 1rem 3rem #263a670c; }
+.metric { display: grid; gap: .5rem; }
+.metric strong { font-size: 2rem; color: #4461ee; }
+.metric span, small { color: #667085; }
+.dashboard-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-top: 1rem; }
+.list-row { display: flex; justify-content: space-between; gap: 1rem; padding: 1rem 0; border-bottom: 1px solid #edf0f5; }
+@media (max-width: 760px) { .metrics, .dashboard-grid { grid-template-columns: 1fr 1fr; } .list-row { display: grid; } }

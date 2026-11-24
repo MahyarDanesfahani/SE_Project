@@ -37,6 +37,7 @@ API چارت درسی:
 - `GET /api/v1/calendar` — تقویم یکپارچه امتحانات و وظایف
 - `POST /api/v1/announcements` — ثبت اطلاعیه با منبع
 - `GET /api/v1/announcements?search=...&category=...` — جست‌وجو و فیلتر اطلاعیه‌ها
+- `GET /api/v1/dashboard` — داشبورد تجمیعی دانشجو
 
 ## اجرای اولیه
 
