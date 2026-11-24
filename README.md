@@ -38,6 +38,9 @@ API چارت درسی:
 - `POST /api/v1/announcements` — ثبت اطلاعیه با منبع
 - `GET /api/v1/announcements?search=...&category=...` — جست‌وجو و فیلتر اطلاعیه‌ها
 - `GET /api/v1/dashboard` — داشبورد تجمیعی دانشجو
+- `POST /api/v1/surveys` — ایجاد نظرسنجی
+- `POST /api/v1/surveys/{survey_id}/responses` — ثبت پاسخ یک‌باره
+- `GET /api/v1/surveys/{survey_id}/results` — نتیجه پس از حداقل پاسخ
 
 ## اجرای اولیه
 

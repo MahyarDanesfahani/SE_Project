@@ -3,5 +3,6 @@ from app.models.curriculum import Course, CoursePrerequisite, CourseStatus, Curr
 from app.models.offering import ClassSession, CourseOffering, ScheduleScenario, ScheduleScenarioItem, Term
 from app.models.planning import Exam, Task
 from app.models.announcement import Announcement
+from app.models.feedback import SurveyQuestion, SurveyResponse, TeacherSurvey
 
-__all__ = ["Announcement", "ClassSession", "Course", "CourseOffering", "CoursePrerequisite", "CourseStatus", "Curriculum", "CurriculumCourse", "Exam", "GradeRecord", "ScheduleScenario", "ScheduleScenarioItem", "StudentCourseRecord", "StudentProfile", "Task", "Term", "University", "User"]
+__all__ = ["Announcement", "ClassSession", "Course", "CourseOffering", "CoursePrerequisite", "CourseStatus", "Curriculum", "CurriculumCourse", "Exam", "GradeRecord", "ScheduleScenario", "ScheduleScenarioItem", "StudentCourseRecord", "StudentProfile", "SurveyQuestion", "SurveyResponse", "Task", "TeacherSurvey", "Term", "University", "User"]
