@@ -1,0 +1,1 @@
+"""University announcements module."""
