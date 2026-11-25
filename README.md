@@ -45,6 +45,8 @@ API چارت درسی:
 - `GET /api/v1/meal/menu` — منوی ثبت‌شده/آزمایشی
 - `POST /api/v1/meal/reservations/{menu_item_id}` — درخواست رزرو داخلی آزمایشی
 - `POST /api/v1/ai/chat` — گفت‌وگوی کنترل‌شده با وضعیت Provider
+- `GET /api/v1/notifications?unread_only=true` — اعلان‌های کاربر
+- `POST /api/v1/notifications/{notification_id}/read` — علامت‌گذاری به‌عنوان خوانده‌شده
 
 ## اجرای اولیه
 
