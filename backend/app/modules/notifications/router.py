@@ -6,6 +6,7 @@ from sqlalchemy import select
 from sqlalchemy.orm import Session
 
 from app.db.session import get_db
+from app.core.audit import record_audit
 from app.models import Notification, User
 from app.modules.identity.dependencies import get_current_user
 
@@ -46,6 +47,7 @@ def mark_read(notification_id: UUID, user: User = Depends(get_current_user), db:
     if notification is None:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="اعلان پیدا نشد")
     notification.is_read = True
+    record_audit(db, user.id, "notification.read", "notification", str(notification.id))
     db.commit()
     db.refresh(notification)
     return notification

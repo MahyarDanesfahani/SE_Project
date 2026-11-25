@@ -47,6 +47,9 @@ API چارت درسی:
 - `POST /api/v1/ai/chat` — گفت‌وگوی کنترل‌شده با وضعیت Provider
 - `GET /api/v1/notifications?unread_only=true` — اعلان‌های کاربر
 - `POST /api/v1/notifications/{notification_id}/read` — علامت‌گذاری به‌عنوان خوانده‌شده
+- `GET /api/v1/audit/me` — مشاهده رویدادهای امنیتی حساب خود
+
+فهرست کامل موارد ناقص و وابسته به دسترسی بیرونی در [BACKLOG.md](docs/BACKLOG.md) ثبت شده است.
 
 ## اجرای اولیه
 
