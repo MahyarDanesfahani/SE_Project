@@ -12,6 +12,11 @@ class TermCreate(BaseModel):
     ends_on: date | None = None
 
 
+class TermResponse(TermCreate):
+    id: UUID
+    university_id: UUID | None
+
+
 class OfferingCreate(BaseModel):
     term_id: UUID
     course_id: UUID

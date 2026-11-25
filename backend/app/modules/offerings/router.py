@@ -7,7 +7,7 @@ from sqlalchemy.orm import Session, joinedload
 from app.db.session import get_db
 from app.models import ClassSession, Course, CourseOffering, CoursePrerequisite, ScheduleScenario, ScheduleScenarioItem, StudentCourseRecord, Term, User
 from app.modules.identity.dependencies import get_current_user
-from app.modules.offerings.schemas import OfferingCreate, OfferingResponse, SessionCreate, SessionResponse, TermCreate
+from app.modules.offerings.schemas import OfferingCreate, OfferingResponse, SessionCreate, SessionResponse, TermCreate, TermResponse
 from app.modules.offerings.optimizer import generate_valid_scenarios
 from app.modules.offerings.optimizer_schemas import GenerateScheduleRequest, GenerateScheduleResponse, GeneratedScenario
 
@@ -18,7 +18,7 @@ def _offering_response(offering: CourseOffering) -> OfferingResponse:
     return OfferingResponse(id=offering.id, term_id=offering.term_id, course_id=offering.course_id, course_code=offering.course.code, course_title=offering.course.title, section=offering.section, instructor=offering.instructor, capacity=offering.capacity, credits=offering.credits, sessions=[SessionResponse(id=s.id, weekday=s.weekday, start_time=s.start_time, end_time=s.end_time, room=s.room) for s in offering.sessions])
 
 
-@router.post("/terms", status_code=status.HTTP_201_CREATED)
+@router.post("/terms", response_model=TermResponse, status_code=status.HTTP_201_CREATED)
 def create_term(payload: TermCreate, user: User = Depends(get_current_user), db: Session = Depends(get_db)) -> Term:
     term = Term(university_id=user.university_id, **payload.model_dump())
     db.add(term)

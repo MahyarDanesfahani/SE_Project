@@ -9,7 +9,7 @@ class Settings(BaseSettings):
     api_v1_prefix: str = "/api/v1"
     database_url: str = "postgresql+psycopg://zu:zu@localhost:5432/zu_assistant"
     allowed_origins: str = "http://localhost:3000"
-    jwt_secret: str = "change-me-in-production"
+    jwt_secret: str = "change-me-in-production-use-32-byte-secret"
     access_token_expire_minutes: int = 30
     max_upload_size_bytes: int = 5_000_000
 

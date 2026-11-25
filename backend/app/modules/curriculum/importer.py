@@ -49,7 +49,7 @@ def _parse_rows(rows: list[tuple[object, ...]]) -> list[ParsedCourse]:
         raise ValueError("ستون‌های الزامی کد و عنوان درس پیدا نشدند")
     parsed: list[ParsedCourse] = []
     for row_number, row in enumerate(rows[1:], start=2):
-        value = lambda field: row[header[field]] if header[field] < len(row) else ""
+        value = lambda field: row[header[field]] if field in header and header[field] < len(row) else ""
         code, title = _normalise(value("code")), str(value("title") or "").strip()
         errors: list[str] = []
         try:

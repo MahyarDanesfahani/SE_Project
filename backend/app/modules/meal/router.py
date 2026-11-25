@@ -33,9 +33,16 @@ class ReservationResponse(BaseModel):
     status: MealReservationStatus
 
 
-@router.get("/connection", response_model=MealConnectionStatus)
-def connection_status(user: User = Depends(get_current_user)) -> MealConnectionStatus:
-    return MealConnectionStatus()
+class ConnectionResponse(BaseModel):
+    provider: str
+    configured: bool
+    status: str
+    message: str
+
+
+@router.get("/connection", response_model=ConnectionResponse)
+def connection_status(user: User = Depends(get_current_user)) -> ConnectionResponse:
+    return ConnectionResponse(**MealConnectionStatus().__dict__)
 
 
 @router.post("/menu", response_model=MenuResponse, status_code=status.HTTP_201_CREATED)
