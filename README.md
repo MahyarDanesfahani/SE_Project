@@ -41,6 +41,9 @@ API چارت درسی:
 - `POST /api/v1/surveys` — ایجاد نظرسنجی
 - `POST /api/v1/surveys/{survey_id}/responses` — ثبت پاسخ یک‌باره
 - `GET /api/v1/surveys/{survey_id}/results` — نتیجه پس از حداقل پاسخ
+- `GET /api/v1/meal/connection` — وضعیت اتصال پورتال تغذیه
+- `GET /api/v1/meal/menu` — منوی ثبت‌شده/آزمایشی
+- `POST /api/v1/meal/reservations/{menu_item_id}` — درخواست رزرو داخلی آزمایشی
 
 ## اجرای اولیه
 
@@ -66,3 +69,7 @@ python scripts/seed.py
 ## وضعیت
 
 این پروژه در فاز صفر توسعه است. قابلیت‌ها نباید تا زمان پیاده‌سازی واقعی، تست و ثبت در [IMPLEMENTATION_STATUS.md](docs/IMPLEMENTATION_STATUS.md) تکمیل‌شده تلقی شوند.
+
+## نقص باز: اتصال تغذیه دانشگاه
+
+منبع رسمی تغذیه `https://student.znu.ac.ir/` است، اما API یا مجوز رسمی اتصال هنوز در اختیار پروژه نیست. تا زمان دریافت مستندات/API و مجوز دانشگاه، فقط منوی دستی و درخواست رزرو داخلی با وضعیت `pending_internal` مجاز است؛ این وضعیت به معنی رزرو رسمی غذا نیست. رمز عبور، CAPTCHA و MFA نباید دور زده یا در پروژه ذخیره شوند.
