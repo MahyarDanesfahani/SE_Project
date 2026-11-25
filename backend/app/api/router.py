@@ -11,6 +11,7 @@ from app.modules.announcements.router import router as announcements_router
 from app.modules.dashboard.router import router as dashboard_router
 from app.modules.feedback.router import router as feedback_router
 from app.modules.meal.router import router as meal_router
+from app.modules.ai.router import router as ai_router
 
 api_router = APIRouter()
 api_router.include_router(health_router)
@@ -24,3 +25,4 @@ api_router.include_router(announcements_router)
 api_router.include_router(dashboard_router)
 api_router.include_router(feedback_router)
 api_router.include_router(meal_router)
+api_router.include_router(ai_router)

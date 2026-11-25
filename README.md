@@ -44,6 +44,7 @@ API چارت درسی:
 - `GET /api/v1/meal/connection` — وضعیت اتصال پورتال تغذیه
 - `GET /api/v1/meal/menu` — منوی ثبت‌شده/آزمایشی
 - `POST /api/v1/meal/reservations/{menu_item_id}` — درخواست رزرو داخلی آزمایشی
+- `POST /api/v1/ai/chat` — گفت‌وگوی کنترل‌شده با وضعیت Provider
 
 ## اجرای اولیه
 
