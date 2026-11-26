@@ -8,7 +8,7 @@ from sqlalchemy.orm import Session
 
 from app.db.session import get_db
 from app.models import MealMenuItem, MealReservation, MealReservationStatus, User
-from app.modules.identity.dependencies import get_current_user
+from app.modules.identity.dependencies import get_current_user, require_admin
 from app.modules.meal.adapter import MealConnectionStatus
 
 router = APIRouter(prefix="/meal", tags=["meal"])
@@ -46,7 +46,7 @@ def connection_status(user: User = Depends(get_current_user)) -> ConnectionRespo
 
 
 @router.post("/menu", response_model=MenuResponse, status_code=status.HTTP_201_CREATED)
-def create_demo_menu(payload: MenuCreate, user: User = Depends(get_current_user), db: Session = Depends(get_db)) -> MealMenuItem:
+def create_demo_menu(payload: MenuCreate, user: User = Depends(require_admin), db: Session = Depends(get_db)) -> MealMenuItem:
     item = MealMenuItem(university_id=user.university_id, **payload.model_dump())
     db.add(item)
     db.commit()

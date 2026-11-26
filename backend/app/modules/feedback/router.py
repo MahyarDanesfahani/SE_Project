@@ -7,7 +7,7 @@ from sqlalchemy.orm import Session, joinedload
 
 from app.db.session import get_db
 from app.models import SurveyQuestion, SurveyResponse, TeacherSurvey, User
-from app.modules.identity.dependencies import get_current_user
+from app.modules.identity.dependencies import get_current_user, require_admin
 
 router = APIRouter(prefix="/surveys", tags=["teacher-feedback"])
 
@@ -40,7 +40,7 @@ class SurveyResult(BaseModel):
 
 
 @router.post("", response_model=SurveySummary, status_code=status.HTTP_201_CREATED)
-def create_survey(payload: SurveyCreate, user: User = Depends(get_current_user), db: Session = Depends(get_db)) -> SurveySummary:
+def create_survey(payload: SurveyCreate, user: User = Depends(require_admin), db: Session = Depends(get_db)) -> SurveySummary:
     survey = TeacherSurvey(owner_user_id=user.id, title=payload.title, teacher_name=payload.teacher_name, course_id=payload.course_id, minimum_responses=payload.minimum_responses)
     survey.questions = [SurveyQuestion(text=text, order_number=index) for index, text in enumerate(payload.questions, start=1)]
     db.add(survey)

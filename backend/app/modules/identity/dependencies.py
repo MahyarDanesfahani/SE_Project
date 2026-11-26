@@ -23,3 +23,9 @@ def get_current_user(token: str = Depends(oauth2_scheme), db: Session = Depends(
     if user is None or not user.is_active:
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="کاربر معتبر نیست")
     return user
+
+
+def require_admin(user: User = Depends(get_current_user)) -> User:
+    if user.role not in {"admin", "university_admin"}:
+        raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="این عملیات فقط برای مدیر مجاز است")
+    return user

@@ -49,6 +49,7 @@ API چارت درسی:
 - `GET /api/v1/notifications?unread_only=true` — اعلان‌های کاربر
 - `POST /api/v1/notifications/{notification_id}/read` — علامت‌گذاری به‌عنوان خوانده‌شده
 - `GET /api/v1/audit/me` — مشاهده رویدادهای امنیتی حساب خود
+- ثبت اطلاعیه، ساخت نظرسنجی و ورود منوی غذا فقط برای نقش `admin` یا `university_admin` مجاز است.
 
 فهرست کامل موارد ناقص و وابسته به دسترسی بیرونی در [BACKLOG.md](docs/BACKLOG.md) ثبت شده است.
 

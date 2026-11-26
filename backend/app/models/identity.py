@@ -23,6 +23,7 @@ class User(Base):
     email: Mapped[str] = mapped_column(String(255), unique=True, index=True)
     password_hash: Mapped[str] = mapped_column(String(255))
     is_active: Mapped[bool] = mapped_column(Boolean, default=True)
+    role: Mapped[str] = mapped_column(String(30), default="student", server_default="student", index=True)
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now())
     university_id: Mapped[UUID | None] = mapped_column(ForeignKey("universities.id"), index=True)
     university: Mapped[University | None] = relationship(back_populates="users")

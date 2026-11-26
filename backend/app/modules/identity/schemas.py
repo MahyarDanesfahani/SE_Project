@@ -25,6 +25,7 @@ class ProfileResponse(BaseModel):
     email: str
     is_active: bool
     university_id: UUID | None
+    role: str
 
 
 class StudentProfileUpdate(BaseModel):

@@ -8,7 +8,7 @@ from sqlalchemy.orm import Session
 
 from app.db.session import get_db
 from app.models import Announcement, User
-from app.modules.identity.dependencies import get_current_user
+from app.modules.identity.dependencies import get_current_user, require_admin
 
 router = APIRouter(prefix="/announcements", tags=["announcements"])
 
@@ -29,7 +29,7 @@ class AnnouncementResponse(AnnouncementCreate):
 
 
 @router.post("", response_model=AnnouncementResponse, status_code=status.HTTP_201_CREATED)
-def create_announcement(payload: AnnouncementCreate, user: User = Depends(get_current_user), db: Session = Depends(get_db)) -> Announcement:
+def create_announcement(payload: AnnouncementCreate, user: User = Depends(require_admin), db: Session = Depends(get_db)) -> Announcement:
     source_url = str(payload.source_url)
     existing = db.scalar(select(Announcement).where(Announcement.university_id == user.university_id, Announcement.source_url == source_url))
     if existing:
